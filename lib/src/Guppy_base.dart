@@ -3,7 +3,7 @@
 
 // TODO: Put public facing types in this file.
 
-library Guppy.base;
+library guppy.base;
 
 import 'dart:convert';
 import 'dart:collection';

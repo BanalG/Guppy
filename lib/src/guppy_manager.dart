@@ -1,4 +1,4 @@
-part of Guppy;
+part of guppy;
 
 @Injectable()
 class GuppyManager {

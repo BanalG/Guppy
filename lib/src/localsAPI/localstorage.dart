@@ -1,4 +1,4 @@
-part of Guppy;
+part of guppy;
 
 /*
 class GuppyLocalStorage implements GuppyAbstractLocalStorage{

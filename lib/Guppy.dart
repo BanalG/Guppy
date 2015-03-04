@@ -4,12 +4,12 @@
 /// The Guppy library.
 ///
 /// This is an awesome library. More dartdocs go here.
-library Guppy;
+library guppy;
 
 // TODO: Export any libraries intended for clients of this package.
 
-import 'src/Guppy_base.dart';
-export 'src/Guppy_base.dart';
+import 'src/guppy_base.dart';
+export 'src/guppy_base.dart';
 
 import 'dart:indexed_db' as idb;
 import 'package:angular/angular.dart';
