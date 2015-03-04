@@ -1,5 +1,5 @@
 name: guppy
-version: 0.0.1
+version: 0.0.1+2
 description: >
   A tool to build app that can fonction disconnected of the server
 author: BanalG

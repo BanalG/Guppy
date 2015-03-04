@@ -10,7 +10,7 @@ import 'dart:collection';
 import 'dart:async';
 import 'package:logging/logging.dart';
 import 'package:angular/angular.dart';
-import 'package:Guppy/Guppy.dart';
+import 'package:guppy/guppy.dart';
 
 @Injectable()
 abstract class GuppyAbstractLocalStorage {
