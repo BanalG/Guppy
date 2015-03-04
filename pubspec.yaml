@@ -1,0 +1,20 @@
+name: Guppy
+version: 0.0.1
+description: >
+  A tool to build app that can fonction disconnected of the server
+author: Alban GRISON <alban.grison@gmail.com>
+#homepage: https://www.example.com
+environment:
+  sdk: '>=1.0.0 <2.0.0'
+dependencies:
+  #browser: any
+  angular: ">=1.1.0 <2.0.0"
+  di: '>=3.3.1 <4.0.0'
+  logging_handlers: any
+  console_log_handler: any
+  #usage: any
+dev_dependencies:
+  unittest: any
+transformers:
+#- angular:
+#    dart_sdk: /opt/google/dartsdk
