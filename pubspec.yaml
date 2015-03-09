@@ -9,7 +9,7 @@ environment:
 dependencies:
   #browser: any
   angular: ">=1.1.0 <2.0.0"
-  di: '>=3.3.1 <4.0.0'
+  #di: '>=3.3.1 <4.0.0'
   logging_handlers: any
   console_log_handler: any
   #usage: any

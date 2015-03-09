@@ -1,6 +1,5 @@
 part of guppy;
 
-@Injectable()
 class Task{
   final Logger log = new Logger('Task');
   DateTime TS;
@@ -40,7 +39,6 @@ class Task{
   }
 }
 
-@Injectable()
 class GuppyTasks{
 //Initialisation des pendingTasks
 //_indexedDB.objectsStores['Task'] = new ObjectStoreConf('Task', 'TasksStore', indexes:[{'name':'PENDING', 'keyPath':'id', 'unique':false}]);

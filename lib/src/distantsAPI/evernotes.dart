@@ -1,11 +1,11 @@
 part of guppy;
 
 
-class GuppyRest extends GuppyAbstractDistStorage{
+class GuppyEvernotes extends GuppyAbstractDistStorage{
   GuppyConfig config;
   Map storeConfig;
 
-  GuppyRest(name, this.storeConfig) : super(name){
+  GuppyEvernotes(name, this.storeConfig) : super(name){
 
   }
 

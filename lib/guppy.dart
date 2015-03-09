@@ -12,7 +12,7 @@ import 'src/guppy_base.dart';
 export 'src/guppy_base.dart';
 
 import 'dart:indexed_db' as idb;
-import 'package:angular/angular.dart';
+//import 'package:angular/angular.dart';
 import 'dart:async';
 import 'dart:html';
 import 'dart:core';
@@ -26,7 +26,9 @@ part 'src/localsAPI/indexedDB.dart';
 part 'src/localsAPI/memory.dart';
 part 'src/localsAPI/localstorage.dart';
 part 'src/distantsAPI/REST.dart';
+part 'src/distantsAPI/evernotes.dart';
 
+/*
 class Guppy extends Module{
   Guppy() {
     bind(GuppyConfig);
@@ -39,4 +41,8 @@ class Guppy extends Module{
     //bind(ObjectStore);
   }
 
+}*/
+
+class Guppy extends GuppyManager{
+  Guppy();
 }
