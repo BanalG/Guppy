@@ -79,6 +79,12 @@ class GuppyManager {
     return store;
   }
 
+  Future<bool> removeStore(GuppyAbstractStorage store, {eraseData:false}){
+    return store.remove(eraseData).then((_){
+      this.stores.remove(store);
+    });
+  }
+
   GuppyResource addResource(GuppyResource resource){
     this.resources[resource.name] = resource;
     return resource;

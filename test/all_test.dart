@@ -4,7 +4,7 @@
 library Guppy.test;
 
 import 'package:unittest/unittest.dart';
-import 'package:Guppy/Guppy.dart';
+import 'package:guppy/guppy.dart';
 
 main() {
   group('A group of tests', () {
@@ -18,4 +18,10 @@ main() {
       expect(awesome.isAwesome, isTrue);
     });
   });
+
+  //Creation de l'instance sans configuration OK
+
+
+  //Ajout des configurations
+
 }

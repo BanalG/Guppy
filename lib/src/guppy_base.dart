@@ -33,6 +33,10 @@ abstract class GuppyAbstractStorage{
 
   Future init(List<GuppyResource> resources);
 
+  Future remove(bool eraseData){
+
+  }
+
   Stream<Map<String, String>>       list(String type);
   Future<Map<String, String>>       save(String type, Map<String, String> object, [String id]);
   Future<Map<String, String>>       get(String type, String id);
