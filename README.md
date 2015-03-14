@@ -1,19 +1,59 @@
 # Guppy
 
-A library for Dart developers. It is awesome.
+A storage engine which make it easy to build web app with offline capabilities.
+
+> Development in progress, don't use it now !
+
+based over four modules :
+
+* __guppy-core__, which contains core methods used by the three others
+* __guppy-stores__, which contains many stores and will grow day after day *(please help !)*
+* __guppy-manager__, which is the oil between the two firsts components
+* __guppy-orm__, for those who want higher level of abstraction *(mid 2015 I hope)*
+
+[![Build Status](https://travis-ci.org/banalg/guppy.svg)](https://travis-ci.org/banalg/guppy)
 
 ## Usage
+### A simple usage example
+#### 1/ Add stores
 
-A simple usage example:
+    ToDo
 
-    import 'package:Guppy/Guppy.dart';
+#### 2/ Add resources
 
-    main() {
-      var awesome = new Awesome();
-    }
+    ToDo
+
+#### 3/ Initialize Guppy
+
+    ToDo
+
+#### 4/ Use Guppy
+
+    ToDo
+
+### How to use with AngularDart
+
+    ToDo
+
+
+## Help extending Guppy
+Anyone can extend Guppy by adding stores. Please pull request !
 
 ## Features and bugs
 
 Please file feature requests and bugs at the [issue tracker][tracker].
 
-[tracker]: http://example.com/issues/replaceme
+## Thanks
+Freely inspired by :
+
+- [lawndart]
+- [hammock]
+- [harvest]
+
+
+
+
+[tracker]: https://github.com/banalg/guppy/issues
+[lawndart]: https://pub.dartlang.org/packages/lawndart
+[hammock]: https://pub.dartlang.org/packages/hammock
+[harvest]: https://pub.dartlang.org/packages/harvest

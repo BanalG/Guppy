@@ -1,5 +1,16 @@
-part of guppy;
+library guppy.stores.indexeddb;
 
+
+//All stores must include this guppy librarys
+import 'package:guppy/guppy-stores/guppy-stores.dart';
+import 'dart:async';
+
+//Add here specifics librarys for the store
+import 'package:logging/logging.dart';
+import 'dart:html';
+import 'dart:indexed_db' as idb;
+
+//
 class GuppyIndexedDB extends GuppyAbstractLocalStorage{
   final Logger log = new Logger('GuppyIndexedDB');
 

@@ -1,4 +1,4 @@
-part of guppy;
+part of guppy.core;
 
 class Task{
   final Logger log = new Logger('Task');

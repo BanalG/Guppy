@@ -1,4 +1,4 @@
-part of guppy;
+part of guppy.core;
 
 class GuppyConfigStore{
   String name;

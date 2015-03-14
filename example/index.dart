@@ -5,6 +5,11 @@ library Guppy.example;
 
 import 'package:guppy/guppy.dart';
 
+import 'package:guppy/guppy-stores/localsAPI/indexedDB.dart'; // deferred as hello
+import 'package:guppy/guppy-stores/localsAPI/memory.dart';
+import 'package:guppy/guppy-stores/localsAPI/localstorage.dart';
+import 'package:guppy/guppy-stores/distantsAPI/REST.dart';
+import 'package:guppy/guppy-stores/distantsAPI/evernotes.dart';
 
 
 //Todo Utiliser des exemples generiques (Contacts, Milestones, etc.)

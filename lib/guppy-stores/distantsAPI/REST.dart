@@ -1,11 +1,16 @@
-part of guppy;
+library guppy.stores.rest;
 
+//All stores must include this guppy librarys
+import 'package:guppy/guppy-stores/guppy-stores.dart';
 
-class GuppyEvernotes extends GuppyAbstractDistStorage{
+//Add here specifics librarys for the store
+import 'package:logging/logging.dart';
+
+class GuppyRest extends GuppyAbstractDistStorage{
   GuppyConfig config;
   Map storeConfig;
 
-  GuppyEvernotes(name, this.storeConfig) : super(name){
+  GuppyRest(name, this.storeConfig) : super(name){
 
   }
 

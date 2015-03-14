@@ -1,4 +1,4 @@
-part of guppy;
+library guppy.stores.localstorage;
 
 /*
 class GuppyLocalStorage implements GuppyAbstractLocalStorage{
