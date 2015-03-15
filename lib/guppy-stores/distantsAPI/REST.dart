@@ -6,12 +6,16 @@ import 'package:guppy/guppy-stores/guppy-stores.dart';
 //Add here specifics librarys for the store
 import 'package:logging/logging.dart';
 
-class GuppyRest extends GuppyAbstractDistStorage{
-  GuppyConfig config;
-  Map storeConfig;
+class GuppyRest extends GuppyAbstractStorage{
 
-  GuppyRest(name, this.storeConfig) : super(name){
+  String _pathRoot;
 
+  GuppyRest(name) : super(name){
+
+  }
+
+  setPathRoot(String pathRoot){
+    this._pathRoot = pathRoot;
   }
 
   init(){

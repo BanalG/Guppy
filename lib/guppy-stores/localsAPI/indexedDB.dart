@@ -10,31 +10,44 @@ import 'package:logging/logging.dart';
 import 'dart:html';
 import 'dart:indexed_db' as idb;
 
+class GuppyIndexedDBResource extends GuppyAbstractStoreResource{
+  String iDBName;
+  List indexes;
+
+  addIndex(String name, String keyPath, bool unique){
+    indexes.add({'name': name, 'keyPath': keyPath, 'unique': unique});
+  }
+}
+
 //
-class GuppyIndexedDB extends GuppyAbstractLocalStorage{
+class GuppyIndexedDB extends GuppyAbstractStorage{
   final Logger log = new Logger('GuppyIndexedDB');
 
   String iDBName;
   bool isInitialized = false;
 
   //Link between type and objectStore
-  Map<String, GuppyConfigResource> objectsStores = new Map();
-  List<GuppyResource> resources;
+  Map<String, GuppyResource> objectsStores = new Map();
+  List<GuppyIndexedDBResource> resources;
   idb.Database _idb;
 
-  GuppyConfig config;
-  Map storeConfig;
+  //GuppyIndexedDBAbstractConfig config;
+  //Map storeConfig;
 
   //GuppyIndexedDB _indexedDB = new GuppyIndexedDB();
 
   /****************************************************************************************************\
   * API methods
   \****************************************************************************************************/
-  GuppyIndexedDB(name, this.storeConfig) : super(name){
+  GuppyIndexedDB(name) : super(name){
     this.log.finest('Instanciation de Guppy');
   }
 
-  Future init(resources){
+  void setDBName(name){
+    this.iDBName = name;
+  }
+
+  Future open(resources){
     log.finest('start of indexedDB initialization');
     this.resources = resources;
 
@@ -60,7 +73,9 @@ class GuppyIndexedDB extends GuppyAbstractLocalStorage{
     });
   }
 
-
+  close(){
+    this._idb.close();
+  }
 
 /**
  * Initialisation de la base de donnees, appellee en cas de premiere creation ou de montee de version
@@ -86,6 +101,9 @@ class GuppyIndexedDB extends GuppyAbstractLocalStorage{
       //TODO Realiser la montee de version
     }
   }
+
+  search(String type){}
+  nuke(){}
 
   Future<Map<String, String>> get(String type, String id){
     log.finest('_getOneFromDB / $type / $id');

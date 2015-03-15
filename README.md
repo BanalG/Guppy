@@ -15,19 +15,23 @@ based over four modules :
 
 ## Usage
 ### A simple usage example
-#### 1/ Add stores
+#### 1/ Add Stores
 
     ToDo
 
-#### 2/ Add resources
+#### 2/ Add Resources
 
     ToDo
 
-#### 3/ Initialize Guppy
+#### 3/ Bind Resources and Stores
 
     ToDo
 
-#### 4/ Use Guppy
+#### 4/ Initialize Guppy
+
+    ToDo
+
+#### 5/ Use Guppy
 
     ToDo
 

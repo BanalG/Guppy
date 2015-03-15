@@ -57,10 +57,12 @@ Anyone can extend Guppy by adding stores. Please pull request !
 Many services can be plugged to Guppy. Feel free to add your owns !
 
 ### How to create a store
-1. Copy the file _template.dart
-2. Do what you do the best : Developp !
-3. Do the less interesting but certainly more important : Test !
-4. Send a pull request
+1. Clone the Guppy Store repository
+2. Copy the file _template.dart
+3. Do what you do the best : Developp !
+4. Do a less interesting but certainly more important thing : Test, test, and retest !
+5. Write doc _but this is a unnecessary step because you have well documented your code in [dartdoc] format, isn't it ? ;-)_
+6. Send a pull request
 
 ### Below some inspiration of needed stores
 
@@ -72,13 +74,13 @@ Many services can be plugged to Guppy. Feel free to add your owns !
 * AutomaticStore (like [LawnDart][lawndart])
 
 #### Distants stores
-* FileStorage
-    * GoogleDrive
-    * Box
 * Specifics developments
     * REST API
     * WebSocket API
-    *
+    * SOAP API
+* FileStorage
+    * GoogleDrive
+    * Box
 * SaaS Notes managers
     * Evernotes
     * Trello
@@ -111,3 +113,4 @@ Freely inspired by :
 [lawndart]: https://pub.dartlang.org/packages/lawndart
 [hammock]: https://pub.dartlang.org/packages/hammock
 [harvest]: https://pub.dartlang.org/packages/harvest
+[dartdoc]: https://www.dartlang.org/articles/doc-comment-guidelines/

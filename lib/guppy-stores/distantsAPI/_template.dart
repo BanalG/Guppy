@@ -6,7 +6,7 @@ import 'package:guppy/guppy-stores/guppy-stores.dart';
 //Add here specifics librarys for the store
 import 'package:logging/logging.dart';
 
-class GuppyDistantTemplate extends GuppyAbstractDistStorage{
+class GuppyDistantTemplate extends GuppyAbstractStorage{
   GuppyConfig config;
   Map storeConfig;
 
@@ -14,7 +14,7 @@ class GuppyDistantTemplate extends GuppyAbstractDistStorage{
 
   }
 
-  init(){
+  open(){
 
   }
 

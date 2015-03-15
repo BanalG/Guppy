@@ -7,60 +7,56 @@ abstract class GuppyAbstractStorage{
   final Logger log = new Logger('GuppyAbstractStorage');
 
   final String name;
-  final StorageType guppyStoreType;
-  bool _initializationState = false;
+  bool _isOpen = false;
 
-  List<GuppyResource> resource;
-  GuppyConfig config;
+  Map<GuppyResource, GuppyAbstractStoreResource> resources;
 
-  GuppyAbstractStorage(this.name, this.guppyStoreType){
+  GuppyAbstractStorage(this.name);
+
+  /// Add a Ressource to the store, with
+  addRessource(GuppyResource resource, [GuppyAbstractStoreResource conf]) {
+    //Todo : change var to GuppyResourceConf
+    //Check if the resource already exist
+    if (this.resources.contains(resource)) {
+      throw('resource already exist');
+    }
+    this.resources.add(resource);
+    this.resourcesConfig[resource] = conf;
   }
 
   /// Open store
   Future open(List<GuppyResource> resources);
 
-  /// Close store. If eraseData = true, then data must be erased in the store
-  Future close(bool eraseData);
+  /// Get store status
+  bool isOpen() => this._isOpen;
 
-  //get store status
-  bool isOpen() => this._initializationState;
-  Future waitOpening(){
-  }
+  /// Disconnect the store
+  Future close([bool eraseData]);
+
+  ///Clear all datas of the store
+  Future nuke();
 
   /// List all or search
-  Stream<Map<String, String>>       list(String type, {Map fields:null, num limit:null, params:null});
-  Stream<Map<String, String>>       search(String type, Map filters, {fields:null, limit:null, params:null});
+  Stream<Map<String, String>>  list(String type,
+                                    {Map fields: null, params: null, int start: null, int nb: null});
+  Stream<Map<String, String>>  search(String type, Map<String, String> filters,
+                                    {Map fields: null, params: null, int start: null, int nb: null});
 
   /// Classicals Atomic CRUD fonctions
-  Future<Map<String, String>>       save(String type, Map<String, String> object, [String id]);
-  Future<Map<String, String>>       get(String type, String id);
-  Future<Map<String, String>>       update(String type, Map<String, String> object, String id);
-  Future<Map<String, String>>       delete(String type, String id);
+  Future<Map<String, String>>  save(String type, Map<String, String> object, [String id]);
+  Future<Map<String, String>>  get(String type, String id);
+  Future<Map<String, String>>  update(String type, Map<String, String> object, String id);
+  Future<Map<String, String>>  delete(String type, String id);
 
   /// Extended CRUD Functions, optional
-  Stream<String>                    getByKeys(String type, List<String> id){return null;}
-  Stream<String>                    getByValue(String type, String field, List<String> value){return null;}
+  Stream<Map<String, String>>  saveManyByKeys(String type, List<Map<String, String>> objects){return null;}
+  Stream<Map<String, String>>  getManyByKeys(String type, List<String> ids){return null;}
+  Stream<Map<String, String>>  updateManyByKeys(String type, Map<String, String> objects){return null;}
+  Stream<Map<String, String>>  deleteManyByKeys(String type, String field, List<String> value){return null;}
 }
 
-/**
- *
- */
-abstract class GuppyAbstractLocalStorage extends GuppyAbstractStorage{
-  final Logger log = new Logger('GuppyAbstractLocalStorage');
-  GuppyConfig config;
 
-  GuppyAbstractLocalStorage(name) : super(name, StorageType.LOCAL){
-  }
-}
-
-/**
- *
- */
-abstract class GuppyAbstractDistStorage extends GuppyAbstractStorage{
-  final Logger log = new Logger('GuppyAbstractDistStorage');
-  //StorageType guppyStoreType;
-
-  GuppyAbstractDistStorage(name) : super(name, StorageType.DISTANT){
-
-  }
+abstract class GuppyAbstractStoreResource{
+  Function serializer;
+  Function deserializer;
 }

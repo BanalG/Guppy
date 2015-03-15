@@ -2,23 +2,17 @@ part of guppy.core;
 
 class GuppyResource{
   final Logger log = new Logger('GuppyResource');
-  String name;
-  bool isAutoIncrementKey;
-  List<Map> indexes;
+  final String name;
 
-  GuppyAbstractLocalStorage localStore;
-  GuppyAbstractDistStorage distStore;
+  GuppyAbstractStorage localStore, distStore;
+  Map<GuppyAbstractStorage, GuppyAbstractStoreResource> mapping = new Map();
 
-  GuppyResource(
-      this.name,
-      {
-      this.localStore: null,
-      this.distStore: null,
-      this.isAutoIncrementKey: false,
-      this.indexes: null
-      });
+  GuppyResource(this.name);
 
+  ///Return true if the ressource is binded to a LocalStore
   bool hasLocalStore(){ return this.localStore == null ? false : true; }
+
+  ///Return true if the ressource is binded to a DistantStore
   bool hasDistStore(){ return this.distStore == null ? false : true; }
 
 }

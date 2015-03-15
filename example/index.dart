@@ -1,112 +1,59 @@
 // Copyright (c) 2015, <your name>. All rights reserved. Use of this source code
 // is governed by a BSD-style license that can be found in the LICENSE file.
 
-library Guppy.example;
+library guppy.example;
 
-import 'package:guppy/guppy.dart';
+import 'package:guppy/guppy-core/guppy_core.dart';
+import 'package:guppy/guppy-manager/guppy_manager.dart';
 
-import 'package:guppy/guppy-stores/localsAPI/indexedDB.dart'; // deferred as hello
-import 'package:guppy/guppy-stores/localsAPI/memory.dart';
-import 'package:guppy/guppy-stores/localsAPI/localstorage.dart';
+
+import 'package:guppy/guppy-stores/localsAPI/indexedDB.dart'; // deferred as indexedDBLibrary;
 import 'package:guppy/guppy-stores/distantsAPI/REST.dart';
-import 'package:guppy/guppy-stores/distantsAPI/evernotes.dart';
-
-
-//Todo Utiliser des exemples generiques (Contacts, Milestones, etc.)
 
 /**
  * Initializations of the stores
  */
-GuppyIndexedDB indexedDBStore = new GuppyIndexedDB(
-  'indexedDB',
-  {
-      //put what is needed by the plugin here
-      'dbName':'GuppyTestDB'
-  }
-);
+final GuppyIndexedDB indexedDBStore = new GuppyIndexedDB('indexedDB')
+  ..setDBName('GuppyTestDB');
 
-GuppyRest restStore = new GuppyRest(
-    'rest',
-    {//put what is needed by the plugin here
-        'pathRoot':'api.test.io/v1/'
-    }
-);
-
-GuppyEvernotes googleCalendarStore = new GuppyEvernotes(
-    'googleCalendar',
-    {//put what is needed by the plugin here
-        'pathRoot':'api.test.io/v1/'
-    }
-);
+final GuppyRest restStore = new GuppyRest('rest')
+  ..setPathRoot('api.test.io/v1/');
 
 /**
  * Initialization of the resources
  */
-GuppyResource userResource = new GuppyResource(
-    'User',
-    localStore:indexedDBStore,
-    distStore:restStore,
-    indexes:[ // = Can be searched by key :
-        {'name':'ID', 'keyPath':'id', 'unique':true}
-    ]
-);
-
-GuppyResource eventResource = new GuppyResource(
-    'Event',
-    localStore:indexedDBStore,
-    distStore:restStore,
-    indexes:[ // = Can be searched by key :
-        {'name':'ID', 'keyPath':'id', 'unique':true}
-    ]
-);
-
-GuppyResource placeResource = new GuppyResource(
-    'Place',
-    localStore:indexedDBStore,
-    distStore:restStore,
-    indexes:[ // = Can be searched by key :
-        {'name':'ID', 'keyPath':'id', 'unique':true}
-    ]
-);
-
-Map config = {
-  'stores':[
-      indexedDBStore,
-      restStore,
-      googleCalendarStore
-  ],
-    'default':{
-        'localStore':{
-            //'type': GuppyIndexedDB,
-            'dbName':'compterenduDB'
-        },
-        'distStore':{
-            //'type':null,
-            'pathRoot':''
-        }
-    },
-    'resources':[
-        userResource,
-        eventResource,
-        placeResource
-    ]
-};
+final GuppyResource userResource = new GuppyResource('User');
+final GuppyResource eventResource = new GuppyResource('Event');
+final GuppyResource placeResource = new GuppyResource('Place');
 
 main() {
-  GuppyManager storage = new GuppyManager();
+  GuppyManager storage = new GuppyManager()
 
   //add stores
-  storage.addStore(indexedDBStore);
-  storage.addStore(restStore);
-  storage.addStore(googleCalendarStore);
+  ..addStore(indexedDBStore)
+  ..addStore(restStore)
 
   //add resources
-  storage.addResource(userResource);
-  storage.addResource(eventResource);
-  storage.addResource(placeResource);
+  ..addResource(userResource)
+  ..addResource(eventResource)
+  ..addResource(placeResource)
 
-  //OR
-  //storage.setConfig(config);
+  //set store for the tasks manager
+  ..initTaskManager(indexedDBStore);
+
+
+  //bind stores and resources
+  storage
+  ..bindResourceToStore(userResource, indexedDBStore,
+      new GuppyIndexedDBResource()..addIndex('ID', 'id', true)
+  )
+  ..bindResourceToStore(userResource, restStore)
+
+  ..bindResourceToStore(eventResource, indexedDBStore)
+  ..bindResourceToStore(eventResource, restStore)
+
+  ..bindResourceToStore(placeResource, indexedDBStore)
+  ..bindResourceToStore(placeResource, restStore);
 
   //store initialisation
   storage.init().then((_){
