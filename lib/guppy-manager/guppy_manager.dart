@@ -95,7 +95,8 @@ class GuppyManager {
   }
 
   /** Manage Stores **/
-  GuppyAbstractStorage addStore(GuppyAbstractStorage store){
+  GuppyAbstractStorage addStore(GuppyAbstractStorage store, {String id: null}){
+    //id == null ? id = store.name : id = id;
     this.stores.add(store);
     return store;
   }
@@ -129,7 +130,7 @@ class GuppyManager {
     // If store isn't known, add to store list
 
     // Inform the store of the resource with it's config
-    store.addRessource(resource, conf);
+    store.addRessource(resource);
   }
 
   unbindResourceToStore(GuppyResource resource, GuppyAbstractStorage store){

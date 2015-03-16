@@ -3,31 +3,36 @@ part of guppy.core;
 /**
  * Class for implement Storages types
  */
-abstract class GuppyAbstractStorage{
+abstract class GuppyAbstractStorage<V>{
   final Logger log = new Logger('GuppyAbstractStorage');
 
   final String name;
   bool _isOpen = false;
 
-  Map<GuppyResource, GuppyAbstractStoreResource> resources;
+  /// Set to true if configuration is required to handle the resource
+  bool _needConfig;
+
+  Map<String, GuppyResource> _resources;
 
   GuppyAbstractStorage(this.name);
 
-  /// Add a Ressource to the store, with
-  addRessource(GuppyResource resource, [GuppyAbstractStoreResource conf]) {
-    //Todo : change var to GuppyResourceConf
-    //Check if the resource already exist
-    if (this.resources.contains(resource)) {
-      throw('resource already exist');
-    }
-    this.resources.add(resource);
-    this.resourcesConfig[resource] = conf;
+  /// Add a [GuppyResource] to the store
+  addRessource(GuppyResource resource) {
+    // Check if the resource isn't null
+    if(resource == null) throw('resource is null');
+    // Check if the resource already exist
+    if (this._resources[resource] != null) throw('resource already exist');
+    // If needed, check if the resource has the configuration for the store
+    if(this._needConfig && !resource.hasConfOfStore(this)) throw('store $this need a resource configuration');
+    // If needed, check the conf
+    if(this._needConfig && !resource.getConfOfStore(this).isValid()) throw('the conf is invalid');
+    this._resources[resource];
   }
 
-  /// Open store
+  /// Open the store
   Future open(List<GuppyResource> resources);
 
-  /// Get store status
+  /// Get the store status
   bool isOpen() => this._isOpen;
 
   /// Disconnect the store
@@ -57,6 +62,9 @@ abstract class GuppyAbstractStorage{
 
 
 abstract class GuppyAbstractStoreResource{
+  //Check the configuration
+  isValid();
+
   Function serializer;
   Function deserializer;
 }

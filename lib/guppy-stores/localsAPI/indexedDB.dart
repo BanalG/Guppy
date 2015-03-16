@@ -14,6 +14,12 @@ class GuppyIndexedDBResource extends GuppyAbstractStoreResource{
   String iDBName;
   List indexes;
 
+  isValid(){
+    if(iDBName == null || iDBName =="") throw('iDBName is not set');
+
+    return true;
+  }
+
   addIndex(String name, String keyPath, bool unique){
     indexes.add({'name': name, 'keyPath': keyPath, 'unique': unique});
   }
@@ -28,13 +34,9 @@ class GuppyIndexedDB extends GuppyAbstractStorage{
 
   //Link between type and objectStore
   Map<String, GuppyResource> objectsStores = new Map();
-  List<GuppyIndexedDBResource> resources;
+  //List<GuppyIndexedDBResource> resources;
   idb.Database _idb;
 
-  //GuppyIndexedDBAbstractConfig config;
-  //Map storeConfig;
-
-  //GuppyIndexedDB _indexedDB = new GuppyIndexedDB();
 
   /****************************************************************************************************\
   * API methods
@@ -49,7 +51,7 @@ class GuppyIndexedDB extends GuppyAbstractStorage{
 
   Future open(resources){
     log.finest('start of indexedDB initialization');
-    this.resources = resources;
+    this._resources = resources;
 
     this.iDBName = this.config.getLocalStoreConf()['dbName'];
     this.config.getResources().forEach((k, v){
@@ -57,7 +59,7 @@ class GuppyIndexedDB extends GuppyAbstractStorage{
     });
     //timer = new Timer.periodic(new Duration(seconds:10), checkUpdates);
 
-    this.resources.forEach((r){
+    this._resources.forEach((r){
 
     });
 
