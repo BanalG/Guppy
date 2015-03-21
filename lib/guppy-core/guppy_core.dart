@@ -12,7 +12,7 @@ import 'package:logging/logging.dart';
 
 part 'src/guppy_core_stores.dart';
 part 'src/guppy_core_resources.dart';
-part 'src/guppy_core_config.dart';
+//part 'src/guppy_core_config.dart';
 
 
 /**

@@ -10,31 +10,33 @@ import 'package:logging/logging.dart';
 import 'dart:html';
 import 'dart:indexed_db' as idb;
 
-class GuppyIndexedDBResource extends GuppyAbstractStoreResource{
-  String iDBName;
-  List indexes;
-
+/*** Config for Resource ***/
+class GuppyIndexedDB_RC extends GuppyStore_RC{
+  /*** Complete this fonction to check the conf ***/
   isValid(){
     if(iDBName == null || iDBName =="") throw('iDBName is not set');
 
     return true;
   }
 
+  /*** Add here special conf four the store ***/
+  String iDBName;
+  List indexes;
+  bool autoIncrementId = false;
+
   addIndex(String name, String keyPath, bool unique){
-    indexes.add({'name': name, 'keyPath': keyPath, 'unique': unique});
+    indexes.add({'name': name, 'keyPath': keyPath, 'unique': unique, 'autoIncrement': true});
   }
 }
 
 //
-class GuppyIndexedDB extends GuppyAbstractStorage{
+class GuppyIndexedDB extends GuppyStore{
   final Logger log = new Logger('GuppyIndexedDB');
 
   String iDBName;
   bool isInitialized = false;
 
-  //Link between type and objectStore
-  Map<String, GuppyResource> objectsStores = new Map();
-  //List<GuppyIndexedDBResource> resources;
+
   idb.Database _idb;
 
 
@@ -49,20 +51,10 @@ class GuppyIndexedDB extends GuppyAbstractStorage{
     this.iDBName = name;
   }
 
-  Future open(resources){
+  Future open(){
     log.finest('start of indexedDB initialization');
-    this._resources = resources;
 
-    this.iDBName = this.config.getLocalStoreConf()['dbName'];
-    this.config.getResources().forEach((k, v){
-      objectsStores[k] = new GuppyConfigResource(k);
-    });
-    //timer = new Timer.periodic(new Duration(seconds:10), checkUpdates);
-
-    this._resources.forEach((r){
-
-    });
-
+    this.resources.remove(null);
 
     return window.indexedDB.open(
         this.iDBName,
@@ -75,7 +67,7 @@ class GuppyIndexedDB extends GuppyAbstractStorage{
     });
   }
 
-  close(){
+  close([bool eraseData = false]){
     this._idb.close();
   }
 
@@ -89,12 +81,14 @@ class GuppyIndexedDB extends GuppyAbstractStorage{
 
     if(e.oldVersion == 0 ){
       //Premiere creation de la base
-      log.finest('There is ${objectsStores.length} to Initialize');
-      objectsStores.forEach((k, GuppyConfigResource o){
+      log.finest('There is ${this.resources.length} to Initialize');
+
+      this.resources.forEach((k, GuppyResource o){
+        GuppyIndexedDB_RC c = o.getConfOfStore(this);
         log.finest('Initialization of ObjectStore : ${o.name}');
-        idb.ObjectStore t = db.createObjectStore(o.name , autoIncrement: o.isAutoIncrementKey);
-        if(o.indexes != null){
-          o.indexes.forEach((Map i) => t.createIndex(i['name'], i['keyPath'], unique: i['unique']));
+        idb.ObjectStore t = db.createObjectStore(o.name , autoIncrement: c.autoIncrementId);
+        if(c.indexes != null){
+          c.indexes.forEach((Map i) => t.createIndex(i['name'], i['keyPath'], unique: i['unique']));
         }
       });
     } else if(e.oldVersion != e.newVersion ){
@@ -104,13 +98,13 @@ class GuppyIndexedDB extends GuppyAbstractStorage{
     }
   }
 
-  search(String type){}
+  search(String type, Map<String, String> filters, {Map fields: null, params: null, int start: null, int nb: null}){}
   nuke(){}
 
   Future<Map<String, String>> get(String type, String id){
     log.finest('_getOneFromDB / $type / $id');
 
-    GuppyConfigResource objStore = objectsStores[type];
+    GuppyResource objStore = this.resources[type];
     if(objStore == null){log.severe('Guppy / IndexedDB / type non exist : $type');}
 
     var transaction = this._idb.transaction(objStore.name , 'readwrite');
@@ -135,10 +129,10 @@ class GuppyIndexedDB extends GuppyAbstractStorage{
   /**
    *
    */
-  Future<List<Map<String,String>>> list(String type){
+  Stream<Map<String,String>> list(String type, {Map fields: null, params: null, int start: null, int nb: null}){
     log.finest('_getAllFromDB / $type');
 
-    GuppyConfigResource objStore = objectsStores[type];
+    GuppyResource objStore = this.resources[type];
     if(objStore == null){log.severe('Guppy / IndexedDB / type non exist : $type');}
 
     var transaction = this._idb.transaction(objStore.name, 'readonly');
@@ -158,7 +152,7 @@ class GuppyIndexedDB extends GuppyAbstractStorage{
   Future<Map<String, String>> save(String type, Map<String, String> object, [String id]) {
     log.finest('addInDB $type / $id / $object');
 
-    GuppyConfigResource objStore = objectsStores[type];
+    GuppyResource objStore = this.resources[type];
     if(objStore == null){log.severe('Guppy / IndexedDB / type non exist : $type');}
 
     var transaction = this._idb.transaction(objStore.name , 'readwrite');
@@ -177,7 +171,7 @@ class GuppyIndexedDB extends GuppyAbstractStorage{
   Future<Map<String, String>> update(String type, Map<String, String> object, String id) {
     log.finest('_updateInDb $type / $id / $object');
 
-    GuppyConfigResource objStore = objectsStores[type];
+    GuppyResource objStore = this.resources[type];
     if(objStore == null){log.severe('Guppy / IndexedDB / type non exist : $type');}
 
     var transaction = _idb.transaction(objStore.name, 'readwrite');
@@ -192,7 +186,7 @@ class GuppyIndexedDB extends GuppyAbstractStorage{
   Future delete(String type, String id) {
     log.finest('_deleteFromDB $type / $id');
 
-    GuppyConfigResource objStore = objectsStores[type];
+    GuppyResource objStore = this.resources[type];
     if(objStore == null){log.severe('Guppy / IndexedDB / type non exist : $type');}
 
     var transaction = _idb.transaction(objStore.name, 'readwrite');
@@ -210,16 +204,16 @@ class GuppyIndexedDB extends GuppyAbstractStorage{
     idb.Transaction transaction;
     // Clear database.
     if(type == null){
-      objectsStores.forEach((k, GuppyConfigResource e){
+      this.resources.forEach((k, GuppyResource e){
 
-        GuppyConfigResource objStore = e;
+        GuppyResource objStore = e;
         if(objStore == null){log.severe('Guppy / IndexedDB / type non exist : $type');}
 
         transaction = _idb.transaction(objStore.name, 'readwrite');
         transaction.objectStore(objStore.name).clear();
       });
     } else {
-      GuppyConfigResource objStore = objectsStores[type];
+      GuppyResource objStore = this.resources[type];
       if(objStore == null){log.severe('Guppy / IndexedDB / type non exist : $type');}
 
       transaction = _idb.transaction(objStore.name, 'readwrite');

@@ -6,15 +6,17 @@ class GuppyResource{
   final String name;
   Object type;
 
-  GuppyAbstractStorage localStore, distStore;
-  Map<GuppyAbstractStorage, GuppyAbstractStoreResource> mapping = new Map();
+  GuppyStore localStore, onlineStore;
+  Map<GuppyStore, GuppyStore_RC> mapping = new Map();
 
   GuppyResource(this.name);
 
-  setConfForStore(GuppyAbstractStorage store, GuppyAbstractStoreResource conf){
+  /** Manage configurations for Store **/
+  setConfForStore(GuppyStore store, GuppyStore_RC conf){
     if(conf.isValid()) throw('the configuration is invalid');
     mapping[store] = conf;
   }
+
   getConfOfStore(store) => mapping[store];
   hasConfOfStore(store) => mapping[store] == null ? false : true;
 
@@ -25,6 +27,6 @@ class GuppyResource{
   bool hasLocalStore(){ return this.localStore == null ? false : true; }
 
   ///Return true if the ressource is binded to a DistantStore
-  bool hasDistStore(){ return this.distStore == null ? false : true; }
+  bool hasOnlineStore(){ return this.onlineStore == null ? false : true; }
 
 }

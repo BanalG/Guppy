@@ -3,7 +3,7 @@ part of guppy.core;
 class GuppyConfigStore{
   String name;
   StorageType _type;
-  GuppyAbstractStorage _store;
+  GuppyStore _store;
   Map config;
 
   GuppyConfigStore(this.name, this._type, this._store, {this.config:null});

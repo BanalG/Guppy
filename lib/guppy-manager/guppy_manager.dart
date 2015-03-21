@@ -1,26 +1,16 @@
 library guppy.manager;
 
 import 'dart:async';
-import 'dart:html';
+//import 'dart:html';
 import 'package:logging/logging.dart';
 import 'package:guppy/guppy-core/guppy_core.dart';
 
 class GuppyManager {
   final Logger log = new Logger('GuppyManager');
 
-  List<GuppyAbstractStorage> stores;
-  Map<String, GuppyResource> resources;
-  Map<String, String> StoresAndResourcesBinding;
-
-  final StreamController GuppyStream = new StreamController();
-
-  /// Check if all stores are open
-  bool get isOpen => _isOpen;
-  bool _isOpen = false;
-
   /*** Task Manager ***/
   List<Object> _pendingTasks = new List();
-  initTaskManager(GuppyAbstractStorage store){
+  initTaskManager(GuppyStore store){
     var tasksResource = new GuppyResource('GuppyTasks');
     addResource(new GuppyResource('GuppyTasks'));
 
@@ -41,18 +31,38 @@ class GuppyManager {
     this._isOnline = false;
   }
 
+  /*** Manage Guppy Event Stream ***/
+  bool _isStreamActive = false;
+  bool get isStreamActive => _isStreamActive;
+  get getStream => GuppyStream.stream;
+
+  StreamController GuppyStream = new StreamController();
+
+  Stream initEventsStream(){
+    GuppyStream = new StreamController();
+    _isStreamActive = true;
+    return GuppyStream.stream;
+  }
+
+  List<GuppyStore> stores;
+  Map<String, GuppyResource> resources;
+  Map<String, String> StoresAndResourcesBinding;
+
+  /// Check if all stores are open
+  bool get isOpen => _isOpen;
+  bool _isOpen = false;
+
   /**
    * Initialisation
    */
   GuppyManager(/*this.config, [this.localStore, this.distantStore]*/){
-    this.init();
 
     // Register GuppyStream events
     GuppyStream.stream.listen((v) => log.finest('stream : $v'));
 
     //Register online/offline detection
-    window.onOnline.listen(_setOnline());
-    window.onOffline.listen(_setOffline());
+    //window.onOnline.listen(_setOnline());
+    //window.onOffline.listen(_setOffline());
   }
 
   Future<String> waitForInitialization([Duration timeout, int order]) {
@@ -86,7 +96,7 @@ class GuppyManager {
     //Instantiation des systemes de stockage
     List<Future> toInit = new List();
     this.stores.forEach((v){
-      toInit.add(v.open(this.resources.values));
+      toInit.add(v.open());
     });
 
     return Future.wait(toInit)
@@ -95,13 +105,13 @@ class GuppyManager {
   }
 
   /** Manage Stores **/
-  GuppyAbstractStorage addStore(GuppyAbstractStorage store, {String id: null}){
+  GuppyStore addStore(GuppyStore store, {String id: null}){
     //id == null ? id = store.name : id = id;
     this.stores.add(store);
     return store;
   }
 
-  Future<bool> removeStore(GuppyAbstractStorage store){
+  Future<bool> removeStore(GuppyStore store){
     return store.close().then((_){
       this.stores.remove(store);
     });
@@ -124,16 +134,16 @@ class GuppyManager {
   }
 
   /** Manage resources and stores binding **/
-  bindResourceToStore(GuppyResource resource, GuppyAbstractStorage store, [GuppyAbstractStoreResource conf]){
+  bindResourceToStore(GuppyResource resource, GuppyStore store, [GuppyStore_RC conf]){
     // If resource isn't known, add to resources list
-
+    // ToDo
     // If store isn't known, add to store list
-
+    // ToDo
     // Inform the store of the resource with it's config
-    store.addRessource(resource);
+    store.addResource(resource);
   }
 
-  unbindResourceToStore(GuppyResource resource, GuppyAbstractStorage store){
+  unbindResourceToStore(GuppyResource resource, GuppyStore store){
     //store.
   }
 
@@ -186,9 +196,9 @@ class GuppyManager {
       return waitForInitialization().then((v){
         return this.getResource(resourceType).localStore.get(resourceType, id);
       });
-    } else if(getResource(resourceType).hasDistStore()){
+    } else if(getResource(resourceType).hasOnlineStore()){
       return waitForInitialization().then((v){
-        return this.getResource(resourceType).distStore.get(resourceType, id);
+        return this.getResource(resourceType).onlineStore.get(resourceType, id);
       });
     }
 

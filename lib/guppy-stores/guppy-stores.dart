@@ -3,9 +3,6 @@
 
 library guppy.stores;
 
-import 'dart:async';
-import 'package:logging/logging.dart';
-
 import 'package:guppy/guppy-core/guppy_core.dart';
 export 'package:guppy/guppy-core/guppy_core.dart';
 

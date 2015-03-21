@@ -6,7 +6,7 @@ import 'package:guppy/guppy-stores/guppy-stores.dart';
 //Add here specifics librarys for the store
 import 'package:logging/logging.dart';
 
-class GuppyRest extends GuppyAbstractStorage{
+class GuppyRest extends GuppyStore{
 
   String _pathRoot;
 
