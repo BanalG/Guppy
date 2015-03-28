@@ -1,21 +1,19 @@
 library guppy.manager;
 
 import 'dart:async';
-//import 'dart:html';
+import 'dart:html';
 import 'package:logging/logging.dart';
 import 'package:guppy/guppy-core/guppy_core.dart';
 
-class GuppyManager {
+import 'package:guppy/guppy-stores/guppy-stores.dart';
+
+
+class GuppyManager { //dispatcher
   final Logger log = new Logger('GuppyManager');
+  GuppyConfig config;
 
   /*** Task Manager ***/
-  List<Object> _pendingTasks = new List();
-  initTaskManager(GuppyStore store){
-    var tasksResource = new GuppyResource('GuppyTasks');
-    addResource(new GuppyResource('GuppyTasks'));
-
-    bindResourceToStore(tasksResource, store, null);
-  }
+  //Todo TaskManager
 
   /*** Manage network connectivity ***/
   bool _isOnline = false;
@@ -44,9 +42,8 @@ class GuppyManager {
     return GuppyStream.stream;
   }
 
-  List<GuppyStore> stores;
-  Map<String, GuppyResource> resources;
-  Map<String, String> StoresAndResourcesBinding;
+  /*** controls ***/
+  //isAvailable
 
   /// Check if all stores are open
   bool get isOpen => _isOpen;
@@ -61,8 +58,8 @@ class GuppyManager {
     GuppyStream.stream.listen((v) => log.finest('stream : $v'));
 
     //Register online/offline detection
-    //window.onOnline.listen(_setOnline());
-    //window.onOffline.listen(_setOffline());
+    window.onOnline.listen(_setOnline());
+    window.onOffline.listen(_setOffline());
   }
 
   Future<String> waitForInitialization([Duration timeout, int order]) {
@@ -80,7 +77,7 @@ class GuppyManager {
         timeout = timeout * 2;
         order++;
       }
-      var timer = new Timer(timeout, (){
+      new Timer(timeout, (){
         return waitForInitialization(timeout, order).then( (_) => completer.complete()); });
     }
 
@@ -95,8 +92,15 @@ class GuppyManager {
     log.finest('init');
     //Instantiation des systemes de stockage
     List<Future> toInit = new List();
-    this.stores.forEach((v){
-      toInit.add(v.open());
+
+    //If there is no store
+    if(this.config.stores.length == 0 ){
+      throw('There is no store. Please add store(s) and call init again');
+      return null;
+    }
+
+    this.config.stores.forEach((v){
+    toInit.add(v.open());
     });
 
     return Future.wait(toInit)
@@ -104,37 +108,8 @@ class GuppyManager {
       .catchError((e) => log.severe('Error in Guppy Initialization'));
   }
 
-  /** Manage Stores **/
-  GuppyStore addStore(GuppyStore store, {String id: null}){
-    //id == null ? id = store.name : id = id;
-    this.stores.add(store);
-    return store;
-  }
-
-  Future<bool> removeStore(GuppyStore store){
-    return store.close().then((_){
-      this.stores.remove(store);
-    });
-  }
-
-  /** Manage Resources **/
-  GuppyResource addResource(GuppyResource resource){
-    //if resource already exist, reject
-    this.resources[resource.name] = resource;
-    return resource;
-  }
-
-  GuppyResource getResource(String resource){
-    return this.resources[resource];
-  }
-
-  GuppyResource removeResource(String resource){
-    //Todo if resource is binded, reject
-    return this.resources[resource];
-  }
-
   /** Manage resources and stores binding **/
-  bindResourceToStore(GuppyResource resource, GuppyStore store, [GuppyStore_RC conf]){
+  bindResourceToStore(GuppyResource resource, IGuppyStore store, [IGuppyStore_RC conf]){
     // If resource isn't known, add to resources list
     // ToDo
     // If store isn't known, add to store list
@@ -143,7 +118,7 @@ class GuppyManager {
     store.addResource(resource);
   }
 
-  unbindResourceToStore(GuppyResource resource, GuppyStore store){
+  unbindResourceToStore(GuppyResource resource, IGuppyStore store){
     //store.
   }
 
@@ -192,19 +167,19 @@ class GuppyManager {
       - Faire le distant en tache de fond et remonter erreur apres plusieurs tentatives espacees dans le temps
      */
 
-    if(getResource(resourceType).hasLocalStore()){
+    if(this.config.getResource(resourceType).hasLocalStore()){
       return waitForInitialization().then((v){
-        return this.getResource(resourceType).localStore.get(resourceType, id);
+        return this.config.getResource(resourceType).store1.get(resourceType, id);
       });
-    } else if(getResource(resourceType).hasOnlineStore()){
+    } else if(this.config.getResource(resourceType).hasOnlineStore()){
       return waitForInitialization().then((v){
-        return this.getResource(resourceType).onlineStore.get(resourceType, id);
+        return this.config.getResource(resourceType).store2.get(resourceType, id);
       });
     }
 
 
     return waitForInitialization().then((v){
-      return this.getResource(resourceType).localStore.get(resourceType, id);
+      return this.config..getResource(resourceType).store1.get(resourceType, id);
     });
   }
 
@@ -213,7 +188,7 @@ class GuppyManager {
    */
   Future<List<Map<String, String>>> list(String resourceType, [Map param]){
     return waitForInitialization().then((v){
-      return this.getResource(resourceType).localStore.list(resourceType);
+      return this.config.getResource(resourceType).store1.list(resourceType);
     });
   }
 
@@ -224,7 +199,7 @@ class GuppyManager {
     log.finest('save $resourceType / $id / $object');
     //_pendingTasks.add(new Task('add', type, id, object));
     return waitForInitialization().then((v) {
-      return this.getResource(resourceType).localStore.save(resourceType, object, id);
+      return this.config.getResource(resourceType).store1.save(resourceType, object, id);
     });
   }
 
@@ -232,17 +207,14 @@ class GuppyManager {
    *
    */
   Future<Map<String, String>> update(String resourceType, Map<String, String> object, String id){
-    Map<String, String> newObject = object;
-    Map<String, String> oldObject;
-
     return waitForInitialization().then((v) {
-      return this.getResource(resourceType).localStore.update(resourceType, object, id);
+      return this.config.getResource(resourceType).store1.update(resourceType, object, id);
     });
   }
 
   Future<Map<String, String>> delete(String resourceType, String id){
     //_pendingTasks.add(new Task('delete', type, id));
-    return this.getResource(resourceType).localStore.delete(resourceType, id);
+    return this.config.getResource(resourceType).store1.delete(resourceType, id);
   }
 
 

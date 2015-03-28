@@ -1,16 +1,16 @@
 library guppy.stores.distant_template;
-
+/*
 //All stores must include this guppy librarys
 import 'package:guppy/guppy-stores/guppy-stores.dart';
 
 //Add here specifics librarys for the store
 import 'package:logging/logging.dart';
 
-class GuppyDistantTemplate extends GuppyStore{
-  GuppyConfig config;
+class GuppyStoreTemplate extends IGuppyStore{
+  //GuppyConfig config;
   Map storeConfig;
 
-  GuppyDistantTemplate(name, this.storeConfig) : super(name){
+  GuppyStoreTemplate(name, this.storeConfig) : super(name, true){
 
   }
 
@@ -18,7 +18,8 @@ class GuppyDistantTemplate extends GuppyStore{
 
   }
 
-  list(String type){
+  list(String type,
+       {Map fields: null, params: null, int start: null, int nb: null}){
 
   }
 
@@ -37,4 +38,4 @@ class GuppyDistantTemplate extends GuppyStore{
   save(){
 
   }
-}
+}*/

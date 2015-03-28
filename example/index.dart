@@ -10,16 +10,17 @@ import 'package:guppy/guppy-manager/guppy_manager.dart';
 
 
 import 'package:guppy/guppy-stores/localsAPI/indexedDB/indexedDB.dart'; // deferred as indexedDBLibrary;
-import 'package:guppy/guppy-stores/distantsAPI/ToDo/REST.dart';
+import 'package:guppy/guppy-stores/localsAPI/memory/memory.dart';
 
 /**
  * Initializations of the stores
  */
-final GuppyIndexedDB indexedDBStore = new GuppyIndexedDB('indexedDB')
+final GuppyInMemoryDB store1 = new GuppyInMemoryDB('rest');
+
+final GuppyIndexedDB store2 = new GuppyIndexedDB('indexedDB')
   ..setDBName('GuppyTestDB');
 
-final GuppyRest restStore = new GuppyRest('rest')
-  ..setPathRoot('api.test.io/v1/');
+
 
 /**
  * Initialization of the resources
@@ -43,12 +44,12 @@ main() {
 
   //add stores
   storage
-    ..addStore(indexedDBStore)
-    ..addStore(restStore);
+    ..addStore(store1)
+    ..addStore(store2);
 
   //set store for the tasks manager
-  storage
-  ..initTaskManager(indexedDBStore);
+  //storage
+  //..initTaskManager(indexedDBStore);
 
   //set specials conf between resources and stores
   GuppyIndexedDB_RC UserIndexedDBConf = new GuppyIndexedDB_RC()..addIndex('ID', 'id', true);
@@ -58,16 +59,10 @@ main() {
   storage
   ..bindResourceToStore(
       userResource,
-      indexedDBStore,
+      store1,
       UserIndexedDBConf
-  )
-  ..bindResourceToStore(userResource, restStore)
+  );
 
-  ..bindResourceToStore(eventResource, indexedDBStore)
-  ..bindResourceToStore(eventResource, restStore)
-
-  ..bindResourceToStore(placeResource, indexedDBStore)
-  ..bindResourceToStore(placeResource, restStore);
 
   //store initialisation
   storage.init().then((_){

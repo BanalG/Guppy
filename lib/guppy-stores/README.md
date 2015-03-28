@@ -64,6 +64,12 @@ Many services can be plugged to Guppy. Feel free to add your owns !
 5. Write doc _but this is a unnecessary step because you have well documented your code in [dartdoc] format, isn't it ? ;-)_
 6. Send a pull request
 
+Fork it!
+Create your feature branch: git checkout -b my-new-feature
+Commit your changes: git commit -m 'Add some feature'
+Push to the branch: git push origin my-new-feature
+Submit a pull request :D
+
 ### Below some inspiration of needed stores
 
 #### Browser stores
@@ -83,7 +89,7 @@ Many services can be plugged to Guppy. Feel free to add your owns !
     * Box
 * SaaS Notes managers
     * Evernotes
-    * Trello
+    * Trello : _Seems to not have a CRUD API_ ...
     * Evernotes
 * Saas Events managers
     * GoogleCalendar

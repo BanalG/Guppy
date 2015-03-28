@@ -1,6 +1,18 @@
 # Guppy
 
-A storage engine which make it easy to build web app with offline capabilities.
+A CRUD storage engine which make it easy to build web app with offline capabilities.
+
+Each resource can have is own store. For example for an appointments service with three Objects :
+
+* user preferences
+* events
+* contacts
+
+See how you can store them :
+
+* user preferences are locally saved in localstorage, and remotely on your service store
+* events are locally saved in indexedDB, and remotely in a calendar service
+* contacts are locally saved in indexedDB, and remotely in a Google contacts service
 
 > Development in progress, don't use it now !
 

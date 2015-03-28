@@ -15,7 +15,3 @@ import 'dart:async';
 import 'dart:core';
 import 'dart:convert';
 import 'package:logging/logging.dart';
-
-class Guppy extends GuppyManager{
-  Guppy();
-}

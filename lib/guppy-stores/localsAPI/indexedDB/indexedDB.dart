@@ -11,7 +11,7 @@ import 'dart:html';
 import 'dart:indexed_db' as idb;
 
 /*** Config for Resource ***/
-class GuppyIndexedDB_RC extends GuppyStore_RC{
+class GuppyIndexedDB_RC extends IGuppyStore_RC{
   /*** Complete this fonction to check the conf ***/
   isValid(){
     if(iDBName == null || iDBName =="") throw('iDBName is not set');
@@ -30,7 +30,7 @@ class GuppyIndexedDB_RC extends GuppyStore_RC{
 }
 
 //
-class GuppyIndexedDB extends GuppyStore{
+class GuppyIndexedDB extends IGuppyStore{
   final Logger log = new Logger('GuppyIndexedDB');
 
   String iDBName;
@@ -43,7 +43,7 @@ class GuppyIndexedDB extends GuppyStore{
   /****************************************************************************************************\
   * API methods
   \****************************************************************************************************/
-  GuppyIndexedDB(name) : super(name){
+  GuppyIndexedDB(name) : super(name, StorageType.LOCAL, false){
     this.log.finest('Instanciation de Guppy');
   }
 

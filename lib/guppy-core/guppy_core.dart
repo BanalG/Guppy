@@ -10,9 +10,11 @@ import 'dart:collection';
 import 'dart:async';
 import 'package:logging/logging.dart';
 
+import 'package:guppy/guppy-stores/guppy-stores.dart';
+
 part 'src/guppy_core_stores.dart';
 part 'src/guppy_core_resources.dart';
-//part 'src/guppy_core_config.dart';
+part 'src/guppy_core_config.dart';
 
 
 /**
@@ -20,7 +22,7 @@ part 'src/guppy_core_resources.dart';
  *  - Local : no risks of ruptures between this code and the storage module (ie localStorage, IndexedDB)
  *  - Distant : risks of ruptures between this code and the storage module (ie REST API)
  */
-enum StorageType{LOCAL, DISTANT}
+enum StorageType{LOCAL, REMOTE}
 
 
 
