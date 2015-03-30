@@ -10,24 +10,9 @@ import 'package:logging/logging.dart';
 import 'dart:html';
 import 'dart:indexed_db' as idb;
 
-/*** Config for Resource ***/
-class GuppyIndexedDB_RC extends IGuppyStore_RC{
-  /*** Complete this fonction to check the conf ***/
-  isValid(){
-    if(iDBName == null || iDBName =="") throw('iDBName is not set');
+part 'GIDBConfig.dart';
 
-    return true;
-  }
 
-  /*** Add here special conf four the store ***/
-  String iDBName;
-  List indexes;
-  bool autoIncrementId = false;
-
-  addIndex(String name, String keyPath, bool unique){
-    indexes.add({'name': name, 'keyPath': keyPath, 'unique': unique, 'autoIncrement': true});
-  }
-}
 
 //
 class GuppyIndexedDB extends IGuppyStore{
@@ -43,7 +28,7 @@ class GuppyIndexedDB extends IGuppyStore{
   /****************************************************************************************************\
   * API methods
   \****************************************************************************************************/
-  GuppyIndexedDB(name) : super(name, StorageType.LOCAL, false){
+  GuppyIndexedDB() : super(StorageType.LOCAL, false){
     this.log.finest('Instanciation de Guppy');
   }
 

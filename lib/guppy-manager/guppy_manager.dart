@@ -1,14 +1,13 @@
 library guppy.manager;
 
 import 'dart:async';
-import 'dart:html';
 import 'package:logging/logging.dart';
 import 'package:guppy/guppy-core/guppy_core.dart';
 
 import 'package:guppy/guppy-stores/guppy-stores.dart';
 
 
-class GuppyManager { //dispatcher
+class GuppyManager implements IGuppyStore { //dispatcher
   final Logger log = new Logger('GuppyManager');
   GuppyConfig config;
 
@@ -46,7 +45,7 @@ class GuppyManager { //dispatcher
   //isAvailable
 
   /// Check if all stores are open
-  bool get isOpen => _isOpen;
+  bool isOpen() => _isOpen;
   bool _isOpen = false;
 
   /**
@@ -57,15 +56,12 @@ class GuppyManager { //dispatcher
     // Register GuppyStream events
     GuppyStream.stream.listen((v) => log.finest('stream : $v'));
 
-    //Register online/offline detection
-    window.onOnline.listen(_setOnline());
-    window.onOffline.listen(_setOffline());
   }
 
   Future<String> waitForInitialization([Duration timeout, int order]) {
     var completer = new Completer();
 
-    if(this.isOpen){
+    if(this.isOpen()){
       //Si c'est configure on passe a la suite
       completer.complete();
     } else {
@@ -88,7 +84,7 @@ class GuppyManager { //dispatcher
   /**
    *
    */
-  Future init(){
+  Future open(){
     log.finest('init');
     //Instantiation des systemes de stockage
     List<Future> toInit = new List();
@@ -108,34 +104,8 @@ class GuppyManager { //dispatcher
       .catchError((e) => log.severe('Error in Guppy Initialization'));
   }
 
-  /** Manage resources and stores binding **/
-  bindResourceToStore(GuppyResource resource, IGuppyStore store, [IGuppyStore_RC conf]){
-    // If resource isn't known, add to resources list
-    // ToDo
-    // If store isn't known, add to store list
-    // ToDo
-    // Inform the store of the resource with it's config
-    store.addResource(resource);
-  }
+  Future close(){
 
-  unbindResourceToStore(GuppyResource resource, IGuppyStore store){
-    //store.
-  }
-
-
-  /**
-   * Automatic binding of Resources and Stores
-   */
-  autobindResourcesToStore(){
-    // Check that there is no binding yet
-
-    // Check that there is at least one Store AND only one or zero local Store AND only one or zero distant Store
-
-    // Check that there is at least one Resource
-
-    // for each resource :
-    //  Bind to local store if exist
-    //  Bind to distant store if exist
   }
 
   /**
@@ -155,7 +125,7 @@ class GuppyManager { //dispatcher
   /**
    *
    */
-  Future<Map<String, String>> getOneById(String resourceType, String id){
+  Future<Map<String, String>> get(String resourceType, String id){
     /*
     Si uniquement local store :
       - faire le local

@@ -29,7 +29,7 @@ class GuppyInMemoryDB extends IGuppyStore{
   /****************************************************************************************************\
    * API methods
       \****************************************************************************************************/
-  GuppyInMemoryDB(name) : super(name, false){
+  GuppyInMemoryDB() : super(false){
     this.log.finest('Instanciation de Guppy In Memory');
   }
 

@@ -22,7 +22,7 @@ part 'src/guppy_core_config.dart';
  *  - Local : no risks of ruptures between this code and the storage module (ie localStorage, IndexedDB)
  *  - Distant : risks of ruptures between this code and the storage module (ie REST API)
  */
-enum StorageType{LOCAL, REMOTE}
+//enum StorageType{LOCAL, REMOTE}
 
 
 
