@@ -19,6 +19,8 @@ Exigences :
 
 
  */
+//Todo controler le format de la conf et afficher resultat de facon lisible (ie dlog)
+
 
 Map guppyConfig = {
   'orm':{},

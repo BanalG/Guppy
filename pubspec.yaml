@@ -12,6 +12,7 @@ dependencies:
   #di: '>=3.3.1 <4.0.0'
   logging_handlers: any
   console_log_handler: any
+  dlog: any
   #usage: any
 dev_dependencies:
   unittest: any
