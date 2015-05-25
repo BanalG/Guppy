@@ -45,6 +45,7 @@ class GuppyManager extends IGuppyStore { //dispatcher
   /*** controls ***/
   //isAvailable
 
+
   /// Check if all stores are open
   bool isOpen() => _isOpen;
   bool _isOpen = false;
