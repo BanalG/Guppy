@@ -28,6 +28,7 @@ class GuppyManager extends IGuppyStore { //dispatcher
     this._isOnline = false;
   }
 
+
   /*** Manage Guppy Event Stream ***/
   bool _isStreamActive = false;
   bool get isStreamActive => _isStreamActive;
