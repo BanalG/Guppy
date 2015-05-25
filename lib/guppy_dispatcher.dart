@@ -4,10 +4,10 @@ import 'dart:async';
 import 'package:logging/logging.dart';
 import 'package:guppy/guppy-core/guppy_core.dart';
 
-import 'package:guppy/guppy-stores/guppy-stores.dart';
+import 'package:guppy/guppy-core/src/store/guppy-stores.dart';
 
 
-class GuppyManager implements IGuppyStore { //dispatcher
+class GuppyManager extends IGuppyStore { //dispatcher
   final Logger log = new Logger('GuppyManager');
   GuppyConfig config;
 
@@ -84,7 +84,7 @@ class GuppyManager implements IGuppyStore { //dispatcher
   /**
    *
    */
-  Future open(){
+  Future open() async {
     log.finest('init');
     //Instantiation des systemes de stockage
     List<Future> toInit = new List();

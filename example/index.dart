@@ -10,7 +10,7 @@ import 'package:guppy/guppy-manager/guppy_manager.dart';
 
 
 import 'package:guppy/guppy-stores/localsAPI/indexedDB/indexedDB.dart' deferred as iDB;
-import 'package:guppy/guppy-stores/localsAPI/memory/memory.dart' deferred as memDB;
+import 'package:guppy/guppy-stores/localsAPI/memory/main.dart' deferred as memDB;
 
 
 /*
@@ -25,7 +25,9 @@ Exigences :
 Map guppyConfig = {
   'orm':{},
   'dispatcher':{
-    'eventStream':true,
+    'global':{
+      'eventStream':true
+    },
     'resources':{
       'UserPrefs':{
         'store1':'localstorage',
@@ -71,22 +73,27 @@ Map guppyConfig = {
   }
 };
 
+memDB.GuppyInMemoryDB memoryDB = memDB.GuppyInMemoryDB();
+
+
+
+
 Stream guppyStream;
 
-main() {
+main() async {
   GuppyManager storage = new GuppyManager();
 
 
   //store initialisation
-  storage.open().then((_){
-    print('Store initialized');
+  await storage.open();
+  print('Store initialized');
 
     //Initialisations of Data in the store if this is the first use (Tests only)
 
 
     //Utiliser le store
-  }
-  );
+
+
 
   //IHM Initialisation
 
